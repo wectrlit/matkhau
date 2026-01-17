@@ -483,8 +483,6 @@ ven
 viec
 vien
 viet
-vii
-viii
 voi
 von
 vua
@@ -500,11 +498,6 @@ xem
 xen
 xep
 xet
-xii
-xiii
-xin
-xiv
-xix
 xoa
 xong
 xuat
