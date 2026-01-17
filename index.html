@@ -369,7 +369,7 @@
         }
 
         // Hàm viết hoa chữ cái đầu
-        function capitalizeFirst(word) {
+        function capitalizeFirstLetter(word) {
             if (!word) return word;
             return word.charAt(0).toUpperCase() + word.slice(1);
         }
@@ -389,7 +389,7 @@
         function generatePassphrase() {
             const wordCount = parseInt(document.getElementById('wordCount').value);
             const separator = document.querySelector('input[name="separator"]:checked').value;
-            const capitalizeFirst = document.getElementById('capitalizeFirst').checked;
+            const shouldCapitalize = document.getElementById('capitalizeFirst').checked;
             const addNumbers = document.getElementById('addNumbers').checked;
             const addSpecialChars = document.getElementById('addSpecialChars').checked;
 
@@ -401,8 +401,8 @@
                 let result = word;
                 
                 // Viết hoa chữ cái đầu nếu được chọn
-                if (capitalizeFirst) {
-                    result = capitalizeFirst(result);
+                if (shouldCapitalize) {
+                    result = capitalizeFirstLetter(result);
                 }
                 
                 // Thêm số nếu được chọn
