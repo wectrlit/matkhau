@@ -154,6 +154,7 @@
 
         .passphrase-item {
             display: flex;
+            flex-direction: row;
             align-items: center;
             gap: 10px;
             background: #f7fafc;
@@ -167,10 +168,11 @@
             flex: 1;
             font-family: 'Courier New', monospace;
             color: #2d3748;
-            word-break: break-word;
-            overflow-wrap: break-word;
             font-size: 14px;
             line-height: 1.5;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
         }
 
         .copy-btn {
