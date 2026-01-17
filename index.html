@@ -26,7 +26,7 @@
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 700px;
+            max-width: 1000px;
             width: 100%;
         }
 
@@ -153,43 +153,37 @@
         }
 
         .passphrase-item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 10px;
+            display: block;
             background: #f7fafc;
             padding: 14px 16px;
             border-radius: 8px;
             margin-bottom: 10px;
             border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .passphrase-item:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .passphrase-item:active {
+            transform: translateY(0);
         }
 
         .passphrase-text {
-            flex: 1;
             font-family: 'Courier New', monospace;
             color: #2d3748;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: normal;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
             word-wrap: break-word;
-            overflow-wrap: anywhere;
         }
 
-        .copy-btn {
-            background: #48bb78;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: background 0.3s ease;
-        }
 
-        .copy-btn:hover {
-            background: #38a169;
-        }
 
         .notification {
             position: fixed;
@@ -240,14 +234,7 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            .passphrase-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
 
-            .copy-btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -443,10 +430,12 @@
                 // Tạo HTML cho mỗi cụm
                 const item = document.createElement('div');
                 item.className = 'passphrase-item';
-                item.innerHTML = `
-                    <div class="passphrase-text">${passphrase}</div>
-                    <button class="copy-btn" onclick="copyToClipboard('${passphrase.replace(/'/g, "\\'")}')">Sao chép</button>
-                `;
+                item.innerHTML = `<div class="passphrase-text">${passphrase}</div>`;
+                
+                // Thêm sự kiện click để sao chép
+                item.addEventListener('click', function() {
+                    copyToClipboard(passphrase);
+                });
                 
                 resultsDiv.appendChild(item);
             }
