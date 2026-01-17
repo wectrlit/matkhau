@@ -258,8 +258,8 @@
         <div class="control-group">
             <label>Số từ trong cụm mật khẩu:</label>
             <div class="slider-container">
-                <input type="range" id="wordCount" min="3" max="10" value="4">
-                <span class="slider-value" id="wordCountValue">4</span>
+                <input type="range" id="wordCount" min="3" max="10" value="3">
+                <span class="slider-value" id="wordCountValue">3</span>
             </div>
         </div>
 
@@ -289,7 +289,11 @@
             <label>Tùy chọn tăng độ mạnh:</label>
             <div class="checkbox-group">
                 <div class="checkbox-option">
-                    <input type="checkbox" id="addNumbers">
+                    <input type="checkbox" id="capitalizeFirst" checked>
+                    <label for="capitalizeFirst">Viết hoa chữ cái đầu mỗi từ</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="addNumbers" checked>
                     <label for="addNumbers">Thêm số (0-9) sau mỗi từ</label>
                 </div>
                 <div class="checkbox-option">
@@ -299,7 +303,7 @@
             </div>
         </div>
 
-        <button id="generateBtn">Tạo mới</button>
+        <button id="generateBtn">Tạo mật khẩu mới</button>
 
         <div class="results" id="results"></div>
     </div>
@@ -364,6 +368,12 @@
             return selectedWords;
         }
 
+        // Hàm viết hoa chữ cái đầu
+        function capitalizeFirst(word) {
+            if (!word) return word;
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+
         // Hàm thêm số ngẫu nhiên (0-9)
         function addRandomNumber() {
             return Math.floor(Math.random() * 10).toString();
@@ -379,6 +389,7 @@
         function generatePassphrase() {
             const wordCount = parseInt(document.getElementById('wordCount').value);
             const separator = document.querySelector('input[name="separator"]:checked').value;
+            const capitalizeFirst = document.getElementById('capitalizeFirst').checked;
             const addNumbers = document.getElementById('addNumbers').checked;
             const addSpecialChars = document.getElementById('addSpecialChars').checked;
 
@@ -388,6 +399,11 @@
             // Xử lý mỗi từ với các tùy chọn
             const processedWords = words.map(word => {
                 let result = word;
+                
+                // Viết hoa chữ cái đầu nếu được chọn
+                if (capitalizeFirst) {
+                    result = capitalizeFirst(result);
+                }
                 
                 // Thêm số nếu được chọn
                 if (addNumbers) {
@@ -427,7 +443,7 @@
                 item.className = 'passphrase-item';
                 item.innerHTML = `
                     <div class="passphrase-text">${passphrase}</div>
-                    <button class="copy-btn" onclick="copyToClipboard('${passphrase.replace(/'/g, "\\'")}')">Copy</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${passphrase.replace(/'/g, "\\'")}')">Sao chép</button>
                 `;
                 
                 resultsDiv.appendChild(item);
@@ -470,7 +486,7 @@
             document.getElementById('wordCountValue').textContent = this.value;
         });
 
-        // Xử lý sự kiện nút Tạo mới
+        // Xử lý sự kiện nút Tạo mật khẩu mới
         document.getElementById('generateBtn').addEventListener('click', generateAndDisplay);
 
         // Tải từ điển khi trang được load
