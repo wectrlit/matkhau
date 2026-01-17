@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình tạo cụm mật khẩu tiếng Việt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .passphrase-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f7fafc;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .passphrase-text {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            color: #2d3748;
+            word-break: break-all;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #38a169;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #e53e3e;
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e53e3e;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .radio-group {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .passphrase-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .copy-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Trình tạo cụm mật khẩu tiếng Việt</h1>
+
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <div class="control-group">
+            <label>Số từ trong cụm mật khẩu:</label>
+            <div class="slider-container">
+                <input type="range" id="wordCount" min="3" max="10" value="4">
+                <span class="slider-value" id="wordCountValue">4</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Ký tự phân cách:</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="sep-dash" name="separator" value="-" checked>
+                    <label for="sep-dash">Gạch ngang (-)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="sep-underscore" name="separator" value="_">
+                    <label for="sep-underscore">Gạch dưới (_)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="sep-dot" name="separator" value=".">
+                    <label for="sep-dot">Dấu chấm (.)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="sep-space" name="separator" value=" ">
+                    <label for="sep-space">Khoảng trắng</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Tùy chọn tăng độ mạnh:</label>
+            <div class="checkbox-group">
+                <div class="checkbox-option">
+                    <input type="checkbox" id="addNumbers">
+                    <label for="addNumbers">Thêm số (0-9) sau mỗi từ</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="addSpecialChars">
+                    <label for="addSpecialChars">Thêm ký tự đặc biệt (! @ # $ %) sau mỗi từ</label>
+                </div>
+            </div>
+        </div>
+
+        <button id="generateBtn">Tạo mới</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <div class="notification" id="notification">Đã sao chép mật khẩu</div>
+
+    <script>
+        // Biến toàn cục lưu từ điển
+        let dictionary = [];
+
+        // Tải từ điển từ file tudien.txt
+        async function loadDictionary() {
+            try {
+                const response = await fetch('tudien.txt');
+                if (!response.ok) {
+                    throw new Error('Không tìm thấy file tudien.txt');
+                }
+                const text = await response.text();
+                // Tách các dòng, loại bỏ dòng trống và khoảng trắng thừa
+                dictionary = text.split('\n')
+                    .map(word => word.trim())
+                    .filter(word => word.length > 0);
+                
+                if (dictionary.length === 0) {
+                    throw new Error('File tudien.txt trống');
+                }
+                
+                console.log(`Đã tải ${dictionary.length} từ vựng`);
+                return true;
+            } catch (error) {
+                showError(`Lỗi khi tải từ điển: ${error.message}. Vui lòng đảm bảo file tudien.txt nằm cùng thư mục với index.html`);
+                return false;
+            }
+        }
+
+        // Hiển thị lỗi
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Ẩn lỗi
+        function hideError() {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+        }
+
+        // Hàm chọn ngẫu nhiên n từ không trùng lặp từ từ điển
+        function getRandomWords(count) {
+            // Tạo bản sao của từ điển để không ảnh hưởng đến bản gốc
+            const availableWords = [...dictionary];
+            const selectedWords = [];
+            
+            for (let i = 0; i < count; i++) {
+                // Chọn ngẫu nhiên một index
+                const randomIndex = Math.floor(Math.random() * availableWords.length);
+                // Lấy từ tại vị trí đó và xóa khỏi danh sách
+                selectedWords.push(availableWords.splice(randomIndex, 1)[0]);
+            }
+            
+            return selectedWords;
+        }
+
+        // Hàm thêm số ngẫu nhiên (0-9)
+        function addRandomNumber() {
+            return Math.floor(Math.random() * 10).toString();
+        }
+
+        // Hàm thêm ký tự đặc biệt ngẫu nhiên
+        function addRandomSpecialChar() {
+            const specialChars = ['!', '@', '#', '$', '%'];
+            return specialChars[Math.floor(Math.random() * specialChars.length)];
+        }
+
+        // Hàm tạo một cụm mật khẩu
+        function generatePassphrase() {
+            const wordCount = parseInt(document.getElementById('wordCount').value);
+            const separator = document.querySelector('input[name="separator"]:checked').value;
+            const addNumbers = document.getElementById('addNumbers').checked;
+            const addSpecialChars = document.getElementById('addSpecialChars').checked;
+
+            // Lấy các từ ngẫu nhiên
+            const words = getRandomWords(wordCount);
+            
+            // Xử lý mỗi từ với các tùy chọn
+            const processedWords = words.map(word => {
+                let result = word;
+                
+                // Thêm số nếu được chọn
+                if (addNumbers) {
+                    result += addRandomNumber();
+                }
+                
+                // Thêm ký tự đặc biệt nếu được chọn
+                if (addSpecialChars) {
+                    result += addRandomSpecialChar();
+                }
+                
+                return result;
+            });
+            
+            // Ghép các từ với ký tự phân cách
+            return processedWords.join(separator);
+        }
+
+        // Hàm tạo 5 cụm mật khẩu và hiển thị
+        function generateAndDisplay() {
+            if (dictionary.length === 0) {
+                showError('Từ điển chưa được tải. Vui lòng kiểm tra file tudien.txt');
+                return;
+            }
+
+            hideError();
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            // Tạo 5 cụm mật khẩu
+            for (let i = 0; i < 5; i++) {
+                const passphrase = generatePassphrase();
+                
+                // Tạo HTML cho mỗi cụm
+                const item = document.createElement('div');
+                item.className = 'passphrase-item';
+                item.innerHTML = `
+                    <div class="passphrase-text">${passphrase}</div>
+                    <button class="copy-btn" onclick="copyToClipboard('${passphrase.replace(/'/g, "\\'")}')">Copy</button>
+                `;
+                
+                resultsDiv.appendChild(item);
+            }
+        }
+
+        // Hàm sao chép vào clipboard
+        function copyToClipboard(text) {
+            // Sử dụng Clipboard API
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification();
+            }).catch(err => {
+                console.error('Lỗi khi sao chép:', err);
+                // Phương pháp dự phòng cho trình duyệt cũ
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showNotification();
+            });
+        }
+
+        // Hàm hiển thị thông báo
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            // Tự động ẩn sau 3 giây
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Cập nhật giá trị slider
+        document.getElementById('wordCount').addEventListener('input', function() {
+            document.getElementById('wordCountValue').textContent = this.value;
+        });
+
+        // Xử lý sự kiện nút Tạo mới
+        document.getElementById('generateBtn').addEventListener('click', generateAndDisplay);
+
+        // Tải từ điển khi trang được load
+        window.addEventListener('load', async function() {
+            const loaded = await loadDictionary();
+            if (loaded) {
+                // Tự động tạo mật khẩu lần đầu
+                generateAndDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
